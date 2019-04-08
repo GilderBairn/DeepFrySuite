@@ -20,4 +20,9 @@ public class BaseFilter implements FryFilter
   {
     return null;
   }
+
+  public void reloadImage(BufferedImage img)
+  {
+    this.srcImg = img;  
+  }
 }

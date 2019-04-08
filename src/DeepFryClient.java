@@ -18,19 +18,29 @@ public class DeepFryClient
       {
         BufferedImage img = ImageIO.read(new File(args[0]));
         FryController control = new FryController(img);
+        control.addFilter("sharpen");
+        control.addFilter("contrast");
         img = control.applyFilters();
         String outpath = args[0].substring(0, args[0].length() - 4) + "_fryed.jpg";
         File outfile = new File(outpath);
         JPEGImageWriteParam jpeg = new JPEGImageWriteParam(null);
         jpeg.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        jpeg.setCompressionQuality(0.05f);
+        jpeg.setCompressionQuality(0.1f);
         ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-        writer.setOutput(new FileImageOutputStream(outfile));
+        FileImageOutputStream ofstream = new FileImageOutputStream(outfile);
+        writer.setOutput(ofstream);
         writer.write(null, new IIOImage(img, null, null), jpeg);
-        for (int i = 0; i < 3; i++)
+        ofstream.close();
+        img = ImageIO.read(outfile);
+        for (int i = 0; i < 2; i++)
         {
           img = ImageIO.read(outfile);
+          control.reloadBaseImage(img);
+          img = control.applyFilters();
+          ofstream = new FileImageOutputStream(outfile);
+          writer.setOutput(ofstream);
           writer.write(null, new IIOImage(img, null, null), jpeg);
+          ofstream.close();
         }
       }
       catch(IOException e)

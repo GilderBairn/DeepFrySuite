@@ -13,10 +13,14 @@ public class FryController
 
    public void addFilter(String classname)
    {
-     /*if (classname.equals("sharpen"))
+     if (classname.equals("sharpen"))
      {
        this.filters = new SharpenFilter(this.filters);
-     }*/
+     }
+     else if (classname.equals("contrast"))
+     {
+       this.filters = new ContrastFilter(this.filters);
+     }
    }
 
    public void undo()
@@ -30,6 +34,11 @@ public class FryController
    public BufferedImage applyFilters()
    {
      return this.filters.apply();
+   }
+
+   public void reloadBaseImage(BufferedImage img)
+   {
+     this.filters.reloadImage(img);
    }
 
 }
